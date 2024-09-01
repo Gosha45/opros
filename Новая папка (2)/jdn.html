@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Опросник</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #quiz-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .answers {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="quiz-container">
+        <div id="question" class="question"></div>
+        <div id="answers" class="answers"></div>
+        <button id="next-button" onclick="nextQuestion()">Следующий вопрос</button>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                text: "Какой язык программирования используется для разработки под Android?",
+                answers: ["Java", "Python", "C#"],
+                correct: 0
+            },
+            {
+                text: "Какой метод используется для сортировки массивов в JavaScript?",
+                answers: ["sort()", "order()", "arrange()"],
+                correct: 0
+            },
+            {
+                text: "Какой из этих операторов используется для сравнения в JavaScript?",
+                answers: ["==", "=", "==="],
+                correct: 2
+            },
+            {
+                text: "Как называется метод, вызываемый при запуске программы в C#?",
+                answers: ["Main", "Start", "Begin"],
+                correct: 0
+            },
+            {
+                text: "Какой тип данных используется для хранения целых чисел в C#?",
+                answers: ["int", "float", "char"],
+                correct: 0
+            },
+            {
+                text: "Какой метод используется для вывода текста в консоль в JavaScript?",
+                answers: ["console.log()", "console.output()", "console.print()"],
+                correct: 0
+            }
+        ];
+
+        let shuffledQuestions, currentQuestionIndex = 0, correctAnswers = 0;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startQuiz() {
+            shuffledQuestions = [...questions];
+            shuffle(shuffledQuestions);
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            if (currentQuestionIndex >= shuffledQuestions.length) {
+                showResults();
+                return;
+            }
+
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            document.getElementById('question').innerText = currentQuestion.text;
+            const answersDiv = document.getElementById('answers');
+            answersDiv.innerHTML = '';
+
+            currentQuestion.answers.forEach((answer, index) => {
+                const label = document.createElement('label');
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'answer';
+                radio.value = index;
+                label.appendChild(radio);
+                label.appendChild(document.createTextNode(answer));
+                answersDiv.appendChild(label);
+            });
+        }
+
+        function nextQuestion() {
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+            if (selectedAnswer) {
+                if (parseInt(selectedAnswer.value) === shuffledQuestions[currentQuestionIndex].correct) {
+                    correctAnswers++;
+                }
+                currentQuestionIndex++;
+                displayQuestion();
+            } else {
+                alert("Пожалуйста, выберите ответ.");
+            }
+        }
+
+        function showResults() {
+            const percentage = (correctAnswers / shuffledQuestions.length) * 100;
+            document.getElementById('quiz-container').innerHTML = `<h2>Вы ответили правильно на ${percentage}% вопросов.</h2>`;
+        }
+
+        startQuiz();
+    </script>
+
+</body>
+</html>
+
+Найти еще
